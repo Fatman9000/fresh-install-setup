@@ -1,7 +1,7 @@
 ---
 - name: Install packages and configure fresh archlinux based install
   hosts: localhost
-  become: yes
+  become: true
   vars:
     arch_gpu_drivers:
       NVIDIA: "nvidia"
@@ -10,19 +10,19 @@
   tasks:
     - name: Update package repositories
       pacman:
-        update_cache: yes
+        update_cache: true
 
-    - name: Check GPU Manufacturer
-      command: "lspci | grep -i VGA"
-      register: gpu_info
-      changed_when: false
-      ignore_errors: yes
+    # - name: Check GPU Manufacturer
+    #   command: "lspci | grep -i VGA"
+    #   register: gpu_info
+    #   changed_when: false
+    #   ignore_errors: true
 
-    - name: Install GPU Drivers
-      pacman:
-        name: "{{ arch_gpu_drivers[gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')] }}"
-        state: present
-      when: gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')
+    # - name: Install GPU Drivers
+    #   pacman:
+    #     name: "{{ arch_gpu_drivers[gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')] }}"
+    #     state: present
+    #   when: gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')
 
     - name: Install required packages
       pacman:
