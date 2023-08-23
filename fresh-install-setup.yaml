@@ -1,29 +1,66 @@
 ---
+# tasks file for fresh-install-setup
 - name: Install packages and configure fresh archlinux based install
   hosts: localhost
   become: true
   vars:
-    arch_gpu_drivers:
-      NVIDIA: "nvidia"
-      AMD: "mesa"
+    username: fatman9000
+    dotfiles:
+      url: https://github.com/Fatman9000/dotfiles.git
+      destination: projects/dotfiles
+      rcup_flags: -fx README.md
 
   tasks:
     - name: Update package repositories
       community.general.pacman:
         update_cache: true
+        upgrade: true
 
-    - name: Check GPU Manufacturer
-      command: "lspci | grep -i VGA"
-      register: gpu_info
-      changed_when: false
-      ignore_errors: true
+    - name: Enable pacman colourised output and verbose package lists
+      replace:
+        path: /etc/pacman.conf
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
+      with_items:
+        - { regexp: "^#Color$", replace: "Color" }
+        - { regexp: "^#VerbosePkgLists$", replace: "VerbosePkgLists" }
 
-    - name: Install GPU Drivers
+    - name: Enable repositories
+      replace:
+        path: /etc/pacman.conf
+        regexp: '^#\[{{ item }}\]$\n^#Include\s+=\s+/etc/pacman.d/mirrorlist$'
+        replace: '[{{ item }}]\nInclude = /etc/pacman.d/mirrorlist'
+      with_items: "{{ pacman.repos }}"
+      notify: Update pacman cache
+      when: pacman.repos is defined
+
+    - name: Install basic utils, shells, apps
       community.general.pacman:
-        name: "{{ arch_gpu_drivers[gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')] }}"
+        name:
+          - xorg
+          - kitty
+          - vlc
+          - gimp
+          - git
+          - vim
+          - source-highlight
+          - tree
+          - base-devel
         state: present
-      when: gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')
-      ignore_errors: true
+
+    - name: Install archival utils
+      community.general.pacman:
+        name:
+          - atool
+          - p7zip
+          - unrar
+          - unzip
+          - xz
+          - zip
+          - bzip2
+          - gzip
+          - tar
+        state: present
 
     - name: Install required packages
       community.general.pacman:
@@ -39,3 +76,52 @@
           - wine-staging
           - libreoffice-fresh
         state: present
+
+    - name: Install download utils
+      pacman:
+        name:
+          - aria2
+          - curl
+          - wget
+        state: present
+
+    - name: install zsh
+      community.general.pacman:
+        name:
+          - zsh
+          - zsh-completions
+          - zsh-syntax-highlighting
+          - fzf
+        state: present
+
+    - name: install KDE and KDE apps
+      community.general.pacman: 
+        - plasma-meta
+        - kde-applications-meta
+        - sddm-kcm
+      state: present
+
+    - name: change "{{ username }}"'s shell to zsh
+      become: true
+      user:
+        name: "{{ username }}"
+        shell: /usr/bin/zsh
+
+    - name: copy zsh dotfile
+      copy:
+        src: user_home/.zshrc
+        dest: /home/{{ username }}/.zshrc
+        force: false
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: u+rw,g+r,o--
+
+    - name: clone oh-my-zsh for users
+      tags:
+        - skip_ansible_lint
+      become: true
+      become_user: "{{ username }}"
+      command: "git clone -c core.autocrlf=input https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh"
+      args:
+        chdir: "~{{ username }}"
+        creates: "~{{ username }}/.oh-my-zsh"
