@@ -5,29 +5,37 @@
   vars:
     arch_gpu_drivers:
       NVIDIA: "nvidia"
-      AMD: "mesa"  # For AMD GPUs, the open-source mesa drivers are usually sufficient.
+      AMD: "mesa"
 
   tasks:
     - name: Update package repositories
-      pacman:
+      community.general.pacman:
         update_cache: true
 
-    # - name: Check GPU Manufacturer
-    #   command: "lspci | grep -i VGA"
-    #   register: gpu_info
-    #   changed_when: false
-    #   ignore_errors: true
+    - name: Check GPU Manufacturer
+      command: "lspci | grep -i VGA"
+      register: gpu_info
+      changed_when: false
+      ignore_errors: true
 
-    # - name: Install GPU Drivers
-    #   pacman:
-    #     name: "{{ arch_gpu_drivers[gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')] }}"
-    #     state: present
-    #   when: gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')
+    - name: Install GPU Drivers
+      community.general.pacman:
+        name: "{{ arch_gpu_drivers[gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')] }}"
+        state: present
+      when: gpu_info.stdout_lines[0] | regex_search('NVIDIA|AMD')
+      ignore_errors: true
 
     - name: Install required packages
-      pacman:
+      community.general.pacman:
         name:
+          - firefox
+          - kitty
+          - lutris
           - discord
           - steam
-          - plasma
+          - keepassxc
+          - neovim
+          - code
+          - wine-staging
+          - libreoffice-fresh
         state: present
