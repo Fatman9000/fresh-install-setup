@@ -12,8 +12,9 @@
       url: https://github.com/Fatman9000/dotfiles.git
       destination: projects/dotfiles
       rcup_flags: -fx README.md
-    pacman.repos:
-
+    repos:
+      - extra
+      - multilib
 
   tasks:
     - name: Update package repositories
@@ -35,9 +36,9 @@
         path: /etc/pacman.conf
         regexp: '^#\[{{ item }}\]$\n^#Include\s+=\s+/etc/pacman.d/mirrorlist$'
         replace: '[{{ item }}]\nInclude = /etc/pacman.d/mirrorlist'
-      with_items: "{{ pacman.repos }}"
+      with_items: "{{ repos }}"
       notify: Update pacman cache
-      when: pacman.repos is defined
+      when: repos is defined
 
     - name: Install basic utils, shells, apps
       community.general.pacman:
