@@ -109,14 +109,14 @@
         name: "{{ username }}"
         shell: /usr/bin/zsh
 
-    - name: Copy zsh dotfile
-      copy:
-        src: user_home/.zshrc
-        dest: /home/{{ username }}/.zshrc
-        force: false
-        owner: "{{ username }}"
-        group: "{{ username }}"
-        mode: u+rw,g+r,o--
+    # - name: Copy zsh dotfile
+    #   copy:
+    #     src: user_home/.zshrc
+    #     dest: /home/{{ username }}/.zshrc
+    #     force: false
+    #     owner: "{{ username }}"
+    #     group: "{{ username }}"
+    #     mode: u+rw,g+r,o--
 
     - name: Clone oh-my-zsh for users
       tags:
