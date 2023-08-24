@@ -75,6 +75,7 @@
           - code
           - wine-staging
           - libreoffice-fresh
+          - yakuake
         state: present
 
     - name: Install download utils
