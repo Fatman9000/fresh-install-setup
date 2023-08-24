@@ -127,7 +127,7 @@
     - name: Install oh-my-zsh for users
       become: true
       become_user: "{{ username }}"
-      ansible.builtin.command: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+      ansible.builtin.shell: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
       args:
         chdir: "~{{ username }}"
       # tags:
