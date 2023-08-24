@@ -96,19 +96,20 @@
         state: present
 
     - name: install KDE and KDE apps
-      community.general.pacman: 
-        - plasma-meta
-        - kde-applications-meta
-        - sddm-kcm
-      state: present
+      community.general.pacman:
+        name:
+          - plasma-meta
+          - kde-applications-meta
+          - sddm-kcm
+        state: present
 
-    - name: change "{{ username }}"'s shell to zsh
+    - name: Change "{{ username }}"'s shell to zsh
       become: true
       user:
         name: "{{ username }}"
         shell: /usr/bin/zsh
 
-    - name: copy zsh dotfile
+    - name: Copy zsh dotfile
       copy:
         src: user_home/.zshrc
         dest: /home/{{ username }}/.zshrc
@@ -117,7 +118,7 @@
         group: "{{ username }}"
         mode: u+rw,g+r,o--
 
-    - name: clone oh-my-zsh for users
+    - name: Clone oh-my-zsh for users
       tags:
         - skip_ansible_lint
       become: true
