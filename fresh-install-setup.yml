@@ -2,7 +2,10 @@
 # tasks file for fresh-install-setup
 - name: Install packages and configure fresh archlinux based install
   hosts: localhost
+  gather_facts: true
   become: true
+  collections:
+    - community.general.pacman
   vars:
     username: fatman9000
     dotfiles:
@@ -118,12 +121,13 @@
     #     group: "{{ username }}"
     #     mode: u+rw,g+r,o--
 
-    - name: Clone oh-my-zsh for users
-      tags:
-        - skip_ansible_lint
-      become: true
-      become_user: "{{ username }}"
-      command: "git clone -c core.autocrlf=input https://github.com/ohmyzsh/ohmyzsh .oh-my-zsh"
-      args:
-        chdir: "~{{ username }}"
-        creates: "~{{ username }}/.oh-my-zsh"
+    - name: Install oh-my-zsh for users
+      ansible.builtin.command: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+      # tags:
+      #   - skip_ansible_lint
+      # become: true
+      # become_user: "{{ username }}"
+      # command: "git clone -c core.autocrlf=input https://github.com/ohmyzsh/ohmyzsh .oh-my-zsh"
+      # args:
+      #   chdir: "~{{ username }}"
+      #   creates: "~{{ username }}/.oh-my-zsh"
