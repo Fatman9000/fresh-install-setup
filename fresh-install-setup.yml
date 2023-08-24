@@ -123,7 +123,7 @@
         - skip_ansible_lint
       become: true
       become_user: "{{ username }}"
-      command: "git clone -c core.autocrlf=input https://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh"
+      command: "git clone -c core.autocrlf=input https://github.com/ohmyzsh/ohmyzsh .oh-my-zsh"
       args:
         chdir: "~{{ username }}"
         creates: "~{{ username }}/.oh-my-zsh"
