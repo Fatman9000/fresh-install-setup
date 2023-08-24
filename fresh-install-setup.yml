@@ -122,7 +122,7 @@
     #     mode: u+rw,g+r,o--
 
     - name: Install oh-my-zsh for users
-      ansible.builtin.command: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+      ansible.builtin.command: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
       # tags:
       #   - skip_ansible_lint
       # become: true
