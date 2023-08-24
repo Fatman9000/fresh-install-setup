@@ -115,26 +115,9 @@
         name: "{{ username }}"
         shell: /usr/bin/zsh
 
-    # - name: Copy zsh dotfile
-    #   copy:
-    #     src: user_home/.zshrc
-    #     dest: /home/{{ username }}/.zshrc
-    #     force: false
-    #     owner: "{{ username }}"
-    #     group: "{{ username }}"
-    #     mode: u+rw,g+r,o--
-
     - name: Install oh-my-zsh for users
       become: true
       become_user: "{{ username }}"
       ansible.builtin.shell: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
       args:
         chdir: "~{{ username }}"
-      # tags:
-      #   - skip_ansible_lint
-      # become: true
-      # become_user: "{{ username }}"
-      # command: "git clone -c core.autocrlf=input https://github.com/ohmyzsh/ohmyzsh .oh-my-zsh"
-      # args:
-      #   chdir: "~{{ username }}"
-      #   creates: "~{{ username }}/.oh-my-zsh"
