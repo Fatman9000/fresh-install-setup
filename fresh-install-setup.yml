@@ -12,6 +12,8 @@
       url: https://github.com/Fatman9000/dotfiles.git
       destination: projects/dotfiles
       rcup_flags: -fx README.md
+    pacman.repos:
+
 
   tasks:
     - name: Update package repositories
@@ -122,7 +124,9 @@
     #     mode: u+rw,g+r,o--
 
     - name: Install oh-my-zsh for users
-      ansible.builtin.command: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+      become: true
+      become_user: "{{ username }}"
+      ansible.builtin.command: "wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh;zsh install.sh"
       # tags:
       #   - skip_ansible_lint
       # become: true
