@@ -128,6 +128,6 @@
         dest: "{{ dotfiles.destination }}"
 
     - name: Set dotfiles using stow
-      ansible.builtin.shell: stow
+      ansible.builtin.shell: stow .
       args:
         chdir: "{{ dotfiles.destination }}"
