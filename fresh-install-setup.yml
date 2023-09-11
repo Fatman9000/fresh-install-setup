@@ -10,7 +10,7 @@
     username: fatman9000
     dotfiles:
       url: https://github.com/Fatman9000/dotfiles.git
-      destination: /home/{{ username }}
+      destination: /home/{{ username }}/dotfiles
     repos:
       - extra
       - multilib
@@ -125,7 +125,7 @@
     - name: Fetch dotfiles repo
       ansible.builtin.git:
         repo: "{{ dotfiles.url }}"
-        dest: "{{ dotfiles.destination}}"
+        dest: "{{ dotfiles.destination }}"
 
     - name: Set dotfiles using stow
       ansible.builtin.shell: stow
