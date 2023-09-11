@@ -123,9 +123,12 @@
       args:
         chdir: "~{{ username }}"
 
-    - name: Fetch and stow dotfiles
+    - name: Fetch dotfiles repo
       ansible.builtin.git:
         repo: https://github.com/Fatman9000/dotfiles.git
         dest: "~/{{ username }}"
+
+    - name: Set dotfiles using stow
+      ansible.builtin.shell: stow
       args:
         chdir: "~/{{ username }}/dotfiles"
