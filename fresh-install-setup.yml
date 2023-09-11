@@ -10,8 +10,7 @@
     username: fatman9000
     dotfiles:
       url: https://github.com/Fatman9000/dotfiles.git
-      destination: projects/dotfiles
-      rcup_flags: -fx README.md
+      destination: /home/{{ username }}
     repos:
       - extra
       - multilib
@@ -116,17 +115,17 @@
         name: "{{ username }}"
         shell: /usr/bin/zsh
 
-    - name: Install oh-my-zsh for users
-      become: true
-      become_user: "{{ username }}"
-      ansible.builtin.shell: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
-      args:
-        chdir: "~{{ username }}"
+    # - name: Install oh-my-zsh for users
+    #   become: true
+    #   become_user: "{{ username }}"
+    #   ansible.builtin.shell: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+    #   args:
+    #     chdir: "~{{ username }}"
 
     - name: Fetch dotfiles repo
       ansible.builtin.git:
-        repo: https://github.com/Fatman9000/dotfiles.git
-        dest: "~/{{ username }}"
+        repo: {{ dotfiles.url }}
+        dest: {{ dotfiles.destination}}
 
     - name: Set dotfiles using stow
       ansible.builtin.shell: stow
