@@ -52,6 +52,7 @@
           - source-highlight
           - tree
           - base-devel
+          - stow
         state: present
 
     - name: Install archival utils
@@ -77,7 +78,7 @@
           - discord
           - steam
           - keepassxc
-          - neovim
+          - helix
           - code
           - wine-staging
           - libreoffice-fresh
@@ -121,3 +122,10 @@
       ansible.builtin.shell: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
       args:
         chdir: "~{{ username }}"
+
+    - name: Fetch and stow dotfiles
+      ansible.builtin.git:
+        repo: https://github.com/Fatman9000/dotfiles.git
+        dest: "~/{{ username }}"
+      args:
+        chdir: "~/{{ username }}/dotfiles"
