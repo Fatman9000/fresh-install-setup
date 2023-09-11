@@ -130,4 +130,4 @@
     - name: Set dotfiles using stow
       ansible.builtin.shell: stow
       args:
-        chdir: "{{ dofiles.destination }}"
+        chdir: "{{ dotfiles.destination }}"
